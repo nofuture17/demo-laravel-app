@@ -1,0 +1,39 @@
+version: "3"
+services:
+  nginx:
+    image: "nginx"
+    volumes:
+    - ./../app:/var/www/app:delegated
+    - ./nginx/log:/var/log/nginx:delegated
+    - ./nginx/conf.d:/etc/nginx/conf.d:cached
+    - ./../app/vendor:/var/www/app/vendor:cached
+    ports:
+    - 80:80
+    environment:
+    - TZ=Europe/Moscow
+
+  mysql:
+    image: "mysql:8"
+    volumes:
+    - ./mysql/conf.d:/etc/mysql/conf.d:delegated
+    - ./mysql/data:/var/lib/mysql:cached
+    ports:
+    - 33060:3306
+    environment:
+    - TZ=Europe/Moscow
+    - MYSQL_ROOT_PASSWORD=wda@31faw@
+    - MYSQL_DATA_BASE=app
+    - MYSQL_USER=app
+    - MYSQL_PASSWORD=app
+
+  php:
+    build: ./php
+    volumes:
+    - ./../app:/var/www/app:delegated
+    environment:
+    - TZ=Europe/Moscow
+    - PHP_IDE_CONFIG=serverName=Docker
+    - XDEBUG_CONFIG=remote_host=host.docker.internal remote_enable=1
+
+  selenium:
+    image: selenium/standalone-chrome
