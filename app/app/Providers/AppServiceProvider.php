@@ -2,9 +2,10 @@
 
 namespace App\Providers;
 
-use App\ViewModel\Product\ProductsProvider;
+use App\ViewModel\Product\ProviderInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\ServiceProvider;
+use Tests\Fake\ViewModel\Product\Provider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,7 +16,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind(ProductsProvider::class, \Tests\Fake\Product\ProductsProvider::class);
+        $this->app->bind(ProviderInterface::class, Provider::class);
         $this->app->bind(LengthAwarePaginator::class, \Illuminate\Pagination\LengthAwarePaginator::class);
     }
 

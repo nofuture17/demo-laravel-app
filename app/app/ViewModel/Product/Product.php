@@ -4,13 +4,10 @@
 namespace App\ViewModel\Product;
 
 
-interface Product
+class Product
 {
-    public function getExternalID(): string;
-
-    public function getName(): string;
-
-    public function getImageUrl(): string;
-
-    public function getCategories(): string;
+    public $externalID;
+    public $name;
+    public $imageUrl;
+    public $categories;
 }

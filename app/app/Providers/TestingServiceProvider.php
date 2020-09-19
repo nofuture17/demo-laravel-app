@@ -4,8 +4,9 @@
 namespace App\Providers;
 
 
-use App\ViewModel\Product\ProductsProvider;
+use App\ViewModel\Product\ProviderInterface;
 use Illuminate\Support\ServiceProvider;
+use Tests\Fake\ViewModel\Product\Provider;
 
 class TestingServiceProvider extends ServiceProvider
 {
@@ -15,7 +16,7 @@ class TestingServiceProvider extends ServiceProvider
             return;
         }
 
-        $this->app->bind(ProductsProvider::class, \Tests\Fake\Product\ProductsProvider::class);
+        $this->app->bind(ProviderInterface::class, Provider::class);
     }
 
     public function boot()

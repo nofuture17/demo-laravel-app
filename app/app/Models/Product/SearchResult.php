@@ -1,22 +1,24 @@
 <?php
 
 
-namespace Tests\Fake\Product;
-
+namespace App\Models\Product;
 
 use Illuminate\Support\Collection;
 
-class SearchResult implements \App\ViewModel\Product\SearchResult
+class SearchResult
 {
     private $items;
-    private $pagesCount;
+    private $totalCount;
 
     public function __construct(Collection $items, $totalCount)
     {
         $this->items = $items;
-        $this->pagesCount = $totalCount;
+        $this->totalCount = $totalCount;
     }
 
+    /**
+     * @return Collection|Product[]
+     */
     public function getItems(): Collection
     {
         return $this->items;
@@ -24,6 +26,6 @@ class SearchResult implements \App\ViewModel\Product\SearchResult
 
     public function getTotalCount(): int
     {
-        return $this->pagesCount;
+        return $this->totalCount;
     }
 }

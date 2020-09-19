@@ -1,9 +1,10 @@
 <?php
 
+use App\ViewModel\Product\Product;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 /**
- * @var $items LengthAwarePaginator
+ * @var $items LengthAwarePaginator|Product[]
  */
 ?>
 
@@ -20,15 +21,15 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
         @if($name)
             <div class="products-search__results results">
                 <div class="results__title text-center text-2xl">Search result:</div>
-                @if($items->total())
+                @if($items->isNotEmpty())
                     <div class="results__items">
                         @foreach($items as $item)
                             <div class="results__item product flex justify-evenly my-2">
                                 <button class="product__save bg-blue-500 rounded p-1">Save</button>
-                                <div class="product__id_external">{{$item->getExternalID()}}</div>
-                                <div class="product__name">{{$item->getName()}}</div>
-                                <div class="product__image"><img src="{{$item->getImageUrl()}}" alt=""></div>
-                                <div class="product__categories">{{$item->getCategories()}}</div>
+                                <div class="product__id_external">{{$item->externalID}}</div>
+                                <div class="product__name">{{$item->name}}</div>
+                                <div class="product__image"><img src="{{$item->imageUrl}}" alt=""></div>
+                                <div class="product__categories">{{$item->categories}}</div>
                             </div>
                         @endforeach
                     </div>

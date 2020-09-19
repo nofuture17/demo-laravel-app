@@ -3,7 +3,7 @@
 
 namespace App\Http\Controllers;
 
-use App\ViewModel\Product\ProductsProvider;
+use App\ViewModel\Product\ProviderInterface;
 use App\ViewModel\Product\SearchResult;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
@@ -11,11 +11,11 @@ use Illuminate\Http\Request;
 class ProductController extends Controller
 {
     /**
-     * @var ProductsProvider
+     * @var ProviderInterface
      */
     private $productsProvider;
 
-    public function __construct(ProductsProvider $productsProvider)
+    public function __construct(ProviderInterface $productsProvider)
     {
         $this->productsProvider = $productsProvider;
     }
@@ -45,7 +45,7 @@ class ProductController extends Controller
         $paginator = resolve(LengthAwarePaginator::class, [
             'items' => $result->getItems(),
             'total' => $result->getTotalCount(),
-            'perPage' => ProductsProvider::PAGE_SIZE,
+            'perPage' => ProviderInterface::PAGE_SIZE,
             'currentPage' => $currentPage
         ]);
         $paginator->withQueryString();

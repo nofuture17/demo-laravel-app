@@ -4,7 +4,7 @@
 namespace App\ViewModel\Product;
 
 
-interface ProductsProvider
+interface ProviderInterface
 {
     const PAGE_SIZE = 20;
 
