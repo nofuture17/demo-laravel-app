@@ -9,12 +9,15 @@ use App\ViewModel\Product\Product as ViewModelProduct;
 use App\ViewModel\Product\Provider as ViewModelProvider;
 use App\ViewModel\Product\ProviderInterface as ViewModelProviderInterface;
 use App\ViewModel\Product\SearchResult as ViewModelSearchResult;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Collection;
-use PHPUnit\Framework\TestCase;
 use Tests\Fake\Model\Product\Provider;
+use Tests\TestCase;
 
 class ViewModelProductProviderTest extends TestCase
 {
+    use RefreshDatabase;
+
     public function testSearch()
     {
         $pagesCount = ViewModelProvider::calculatePagesCount(Provider::COUNT);
@@ -41,7 +44,41 @@ class ViewModelProductProviderTest extends TestCase
 
     public function testSave()
     {
+        $form = $this->createProductForm();
+        $viewModelProvider = $this->createViewModelProvider($this->createModelProvider());
 
+        $this->assertDontHasProductWithExternalID($form->external_id);
+        $firstID = $viewModelProvider->save($form);
+        $this->assertNotEmpty($firstID);
+        $this->assertHasProductWithExternalID($form->external_id);
+        $secondID = $viewModelProvider->save($form);
+        $this->assertEquals($firstID, $secondID);
+    }
+
+    public function testSetIdForSavedProductsInSearchResult()
+    {
+        $viewModelProvider = $this->createViewModelProvider($this->createModelProvider());
+        $searchResult = $viewModelProvider->search(Provider::EXIST_PRODUCT_NAME, 1);
+        $savingProduct = $searchResult->getItems()->first();
+        $id = $viewModelProvider->save($savingProduct);
+        $searchResult = $viewModelProvider->search(Provider::EXIST_PRODUCT_NAME, 1);
+        $savedProduct = $savingProduct = $searchResult->getItems()->first();
+        $this->assertNotEmpty($savedProduct->id);
+        $this->assertEquals($id, $savedProduct->id);
+    }
+
+    private function assertDontHasProductWithExternalID(string $id)
+    {
+        $this->assertDatabaseMissing('products', [
+            'external_id' => $id,
+        ]);
+    }
+
+    private function assertHasProductWithExternalID(string $id)
+    {
+        $this->assertDatabaseHas('products', [
+            'external_id' => $id,
+        ]);
     }
 
     private function assertNoItemsResult(ViewModelSearchResult $result)
@@ -90,5 +127,15 @@ class ViewModelProductProviderTest extends TestCase
     private function createViewModelProvider(ProviderInterface $modelProvider): ViewModelProviderInterface
     {
         return new ViewModelProvider($modelProvider);
+    }
+
+    private function createProductForm(): ViewModelProduct
+    {
+        $form = new ViewModelProduct();
+        $form->name = 'TestName';
+        $form->external_id = 'TestExternalID';
+        $form->image_url = 'TestImageUrl';
+        $form->categories = 'TestCategories';
+        return $form;
     }
 }

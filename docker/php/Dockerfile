@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y \
         git \
         libicu-dev \
         zip libzip-dev \
-    && docker-php-ext-install -j$(nproc) mysqli iconv intl zip \
+    && docker-php-ext-install -j$(nproc) mysqli pdo_mysql iconv intl zip \
     && pecl install xdebug-2.8.1 && docker-php-ext-enable xdebug
 
 ADD php.ini /usr/local/etc/php/conf.d/40-custom.ini

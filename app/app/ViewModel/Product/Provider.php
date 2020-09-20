@@ -4,6 +4,7 @@
 namespace App\ViewModel\Product;
 
 
+use App\Models\Product\Product as ModelProduct;
 use Illuminate\Support\Collection;
 
 class Provider implements ProviderInterface
@@ -20,7 +21,13 @@ class Provider implements ProviderInterface
 
     public function save(Product $form): ?int
     {
-        return 333;
+        $product = ModelProduct::byExternalID($form->external_id)->first();
+        if (!$product) {
+            $product = new ModelProduct();
+        }
+        $this->fillProduct($product, $form);
+        $product->save();
+        return $product->id;
     }
 
     public function search($name, $page): SearchResult
@@ -38,13 +45,26 @@ class Provider implements ProviderInterface
         return (int)ceil($itemsCount / self::PAGE_SIZE);
     }
 
-    private function createProductVM(\App\Models\Product\Product $item): Product
+    private function createProductVM(ModelProduct $product): Product
     {
-        $product = new Product();
-        $product->name = $item->name;
-        $product->external_id = $item->external_id;
-        $product->image_url = $item->image_url;
-        $product->categories = $item->categories;
-        return $product;
+        $productVM = new Product();
+        if ($product->id) {
+            $productVM->id = $product->id;
+        } elseif ($id = ModelProduct::byExternalID($product->external_id)->first()->id ?? null) {
+            $productVM->id = $id;
+        }
+        $productVM->name = $product->name;
+        $productVM->external_id = $product->external_id;
+        $productVM->image_url = $product->image_url;
+        $productVM->categories = $product->categories;
+        return $productVM;
+    }
+
+    private function fillProduct(ModelProduct $product, Product $form)
+    {
+        $product->name = $form->name;
+        $product->external_id = $form->external_id;
+        $product->image_url = $form->image_url;
+        $product->categories = $form->categories;
     }
 }
