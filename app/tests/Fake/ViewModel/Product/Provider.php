@@ -14,10 +14,11 @@ class Provider implements ProviderInterface
     const EXIST_PRODUCT_NAME = 'someExistProduct';
     const TOTAL_COUNT = 30;
     const SAVED_PRODUCT_POSITION = 2;
+    const FAKE_ID = 1;
 
     public function save(Product $form): int
     {
-        return 1;
+        return self::FAKE_ID;
     }
 
     public function search($name, $page): SearchResult
@@ -54,6 +55,6 @@ class Provider implements ProviderInterface
 
     private function makeProductSaved(Product $product): int
     {
-        return $product->id = 1;
+        return $product->id = self::FAKE_ID;
     }
 }

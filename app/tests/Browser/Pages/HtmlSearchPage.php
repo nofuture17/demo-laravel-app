@@ -4,7 +4,7 @@ namespace Tests\Browser\Pages;
 
 use Laravel\Dusk\Browser;
 
-class HtmlSearchPage extends Page
+class HtmlSearchPage extends Page implements SearchPage
 {
     const TEXT_SEARCH_RESULT = 'Search result:';
     const TEXT_EMPTY_RESULT = 'Empty result';
@@ -91,6 +91,19 @@ class HtmlSearchPage extends Page
         $this->assertDontShowProduct($browser, $productsCount + 1);
     }
 
+    public function assertHasPagination(Browser $browser, array $items)
+    {
+        $browser->assertPresent('@paginationBlock');
+        foreach ($items as $page) {
+            $browser->assertSourceHas($this->createUrl($this->name, $page, true));
+        }
+    }
+
+    public function assertHasNotPagination(Browser $browser)
+    {
+        $browser->assertMissing('@paginationBlock');
+    }
+
     private function assertShowProduct(Browser $browser, int $index)
     {
         $baseSelector = $this->createProductPositionSelector($index) . ' > ';
@@ -104,19 +117,6 @@ class HtmlSearchPage extends Page
     private function assertDontShowProduct(Browser $browser, int $position)
     {
         $browser->assertMissing($this->createProductPositionSelector($position));
-    }
-
-    public function assertHasPagination(Browser $browser, array $items)
-    {
-        $browser->assertPresent('@paginationBlock');
-        foreach ($items as $page) {
-            $browser->assertSourceHas($this->createUrl($this->name, $page, true));
-        }
-    }
-
-    public function assertHasNotPagination(Browser $browser)
-    {
-        $browser->assertMissing('@paginationBlock');
     }
 
     private function createUrl(?string $name, ?int $page, $escapedAmp = false)

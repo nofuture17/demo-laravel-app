@@ -9,6 +9,8 @@ use Tests\Fake\ViewModel\Product\Provider;
 
 class ProductTest extends DuskTestCase
 {
+    private const NOT_EXIST_PRODUCT_NAME = 'someNotExistProduct';
+
     public function testSave()
     {
         $this->browse(function (Browser $browser) {
@@ -40,7 +42,7 @@ class ProductTest extends DuskTestCase
     {
         $this->browse(function (Browser $browser) {
             $browser->visit(new HtmlSearchPage())
-                ->enterProductName('someNotExistProductName')
+                ->enterProductName(self::NOT_EXIST_PRODUCT_NAME)
                 ->assertHasEmptyResult();
         });
     }

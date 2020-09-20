@@ -40,17 +40,10 @@ class Provider implements ProviderInterface
         return new SearchResult(new Collection($products), $modelResult->getTotalCount());
     }
 
-    public static function calculatePagesCount(int $itemsCount): int
-    {
-        return (int)ceil($itemsCount / self::PAGE_SIZE);
-    }
-
     private function createProductVM(ModelProduct $product): Product
     {
         $productVM = new Product();
-        if ($product->id) {
-            $productVM->id = $product->id;
-        } elseif ($id = ModelProduct::byExternalID($product->external_id)->first()->id ?? null) {
+        if ($id = ModelProduct::byExternalID($product->external_id)->first()->id ?? null) {
             $productVM->id = $id;
         }
         $productVM->name = $product->name;

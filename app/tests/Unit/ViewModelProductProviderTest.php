@@ -20,7 +20,7 @@ class ViewModelProductProviderTest extends TestCase
 
     public function testSearch()
     {
-        $pagesCount = ViewModelProvider::calculatePagesCount(Provider::COUNT);
+        $pagesCount = $this->calculatePagesCount(Provider::COUNT);
         $modelProvider = $this->createModelProvider();
         $viewModelProvider = $this->createViewModelProvider($modelProvider);
         for ($page = 1; $page <= $pagesCount; $page++) {
@@ -32,7 +32,7 @@ class ViewModelProductProviderTest extends TestCase
     {
         $viewModelProvider = $this->createViewModelProvider($this->createModelProvider());
         $this->assertNoItemsResult($viewModelProvider->search(Provider::EXIST_PRODUCT_NAME, 0));
-        $lastPage = ViewModelProvider::calculatePagesCount(Provider::COUNT);
+        $lastPage = $this->calculatePagesCount(Provider::COUNT);
         $this->assertNoItemsResult($viewModelProvider->search(Provider::EXIST_PRODUCT_NAME, $lastPage + 1));
     }
 
@@ -65,6 +65,11 @@ class ViewModelProductProviderTest extends TestCase
         $savedProduct = $savingProduct = $searchResult->getItems()->first();
         $this->assertNotEmpty($savedProduct->id);
         $this->assertEquals($id, $savedProduct->id);
+    }
+
+    public function calculatePagesCount(int $itemsCount): int
+    {
+        return (int)ceil($itemsCount / ViewModelProviderInterface::PAGE_SIZE);
     }
 
     private function assertDontHasProductWithExternalID(string $id)
