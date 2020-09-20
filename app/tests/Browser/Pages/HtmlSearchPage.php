@@ -10,13 +10,8 @@ class HtmlSearchPage extends Page
     const TEXT_EMPTY_RESULT = 'Empty result';
     const TEXT_INSTRUCTION = 'Enter a product name';
     const TEXT_SEARCH_BUTTON_TEXT = 'Search';
-
     const BASE_PATH = '/';
-
-    /**
-     * @var string
-     */
-    private $baseUrl;
+    const TEXT_UPDATE = 'Update';
 
     /**
      * @var string
@@ -28,13 +23,11 @@ class HtmlSearchPage extends Page
      */
     private $page;
 
-    public function __construct(string $baseUrl, ?string $name = null, ?int $page = null)
+    public function __construct(?string $name = null, ?int $page = null)
     {
-        $this->baseUrl = $baseUrl;
         $this->name = $name;
         $this->page = $page;
     }
-
 
     public function url()
     {
@@ -56,6 +49,18 @@ class HtmlSearchPage extends Page
             '@resultBlock' => '.results',
             '@paginationBlock' => '.results__pagination',
         ];
+    }
+
+    public function saveProduct(Browser $browser, int $position)
+    {
+        $browser->click($this->createSaveButtonSelector($position))
+            ->pause(2000);
+    }
+
+    public function assertProductIsSaved(Browser $browser, int $position)
+    {
+        $saveButtonSelector = $this->createSaveButtonSelector($position);
+        $browser->assertSeeIn($saveButtonSelector, self::TEXT_UPDATE);
     }
 
     public function enterProductName(Browser $browser, string $name)
@@ -90,7 +95,7 @@ class HtmlSearchPage extends Page
     {
         $baseSelector = $this->createProductPositionSelector($index) . ' > ';
         $browser->assertPresent($baseSelector . '.product__save');
-        $browser->assertPresent($baseSelector . '.product__id_external');
+        $browser->assertPresent($baseSelector . '.product__external_id');
         $browser->assertPresent($baseSelector . '.product__name');
         $browser->assertPresent($baseSelector . '.product__image');
         $browser->assertPresent($baseSelector . '.product__categories');
@@ -130,5 +135,14 @@ class HtmlSearchPage extends Page
     private function createProductPositionSelector(int $position): string
     {
         return ".product:nth-child({$position})";
+    }
+
+    /**
+     * @param int $position
+     * @return string
+     */
+    private function createSaveButtonSelector(int $position): string
+    {
+        return $this->createProductPositionSelector($position) . ' > .product__save';
     }
 }

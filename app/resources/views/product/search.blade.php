@@ -6,6 +6,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 /**
  * @var $items LengthAwarePaginator|Product[]
  */
+$updateButtonText = 'Update'
 ?>
 
 @extends('layouts.app')
@@ -25,10 +26,11 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
                     <div class="results__items">
                         @foreach($items as $item)
                             <div class="results__item product flex justify-evenly my-2">
-                                <button class="product__save bg-blue-500 rounded p-1">Save</button>
-                                <div class="product__id_external">{{$item->externalID}}</div>
+                                <button
+                                    class="product__save bg-blue-500 rounded p-1">{{ $item->id ? $updateButtonText : 'Save' }}</button>
+                                <div class="product__external_id">{{$item->external_id}}</div>
                                 <div class="product__name">{{$item->name}}</div>
-                                <div class="product__image"><img src="{{$item->imageUrl}}" alt=""></div>
+                                <div class="product__image"><img src="{{$item->image_url}}" alt=""></div>
                                 <div class="product__categories">{{$item->categories}}</div>
                             </div>
                         @endforeach
@@ -49,4 +51,29 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
             display: inline-block;
         }
     </style>
+    <script>
+        $(document).ready(function () {
+            $(document).on('click', '.product__save', function () {
+                let button = $(this)
+                let product = button.closest('.product')
+                let data = {
+                    'external_id': product.find('.product__external_id').text(),
+                    'image_url': product.find('.product__image img').attr('src'),
+                    'name': product.find('.product__name').text(),
+                    'categories': product.find('.product__categories').text(),
+                }
+                let url = '{{url('/save')}}'
+                $.ajax(url, {
+                    method: 'POST',
+                    data: data,
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.id && button.text() != '{{$updateButtonText}}') {
+                            button.text('{{$updateButtonText}}')
+                        }
+                    }
+                })
+            })
+        })
+    </script>
 @endsection

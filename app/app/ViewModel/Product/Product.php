@@ -6,8 +6,9 @@ namespace App\ViewModel\Product;
 
 class Product
 {
-    public $externalID;
+    public $id;
+    public $external_id;
     public $name;
-    public $imageUrl;
+    public $image_url;
     public $categories;
 }

@@ -77,8 +77,8 @@ class ViewModelProductProviderTest extends TestCase
     private function assertItem(Product $modelItem, ViewModelProduct $viewModelItem)
     {
         $this->assertEquals($modelItem->name, $viewModelItem->name);
-        $this->assertEquals($modelItem->image_url, $viewModelItem->imageUrl);
-        $this->assertEquals($modelItem->external_id, $viewModelItem->externalID);
+        $this->assertEquals($modelItem->image_url, $viewModelItem->image_url);
+        $this->assertEquals($modelItem->external_id, $viewModelItem->external_id);
         $this->assertEquals($modelItem->categories, $viewModelItem->categories);
     }
 

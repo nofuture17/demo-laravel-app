@@ -18,6 +18,11 @@ class Provider implements ProviderInterface
         $this->productsProviderModel = $productsProvider;
     }
 
+    public function save(Product $form): ?int
+    {
+        return 333;
+    }
+
     public function search($name, $page): SearchResult
     {
         $modelResult = $this->productsProviderModel->search($name, self::PAGE_SIZE, $page);
@@ -37,8 +42,8 @@ class Provider implements ProviderInterface
     {
         $product = new Product();
         $product->name = $item->name;
-        $product->externalID = $item->external_id;
-        $product->imageUrl = $item->image_url;
+        $product->external_id = $item->external_id;
+        $product->image_url = $item->image_url;
         $product->categories = $item->categories;
         return $product;
     }

@@ -3,6 +3,7 @@
 
 namespace App\Http\Controllers;
 
+use App\ViewModel\Product\Product;
 use App\ViewModel\Product\ProviderInterface;
 use App\ViewModel\Product\SearchResult;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -35,6 +36,19 @@ class ProductController extends Controller
             'page' => $page,
             'items' => $items
         ]);
+    }
+
+    public function save(Request $request)
+    {
+        $form = new Product();
+        $form->external_id = $request->post('external_id');
+        $form->name = $request->post('name');
+        $form->categories = $request->post('categories');
+        $form->image_url = $request->post('image_url');
+
+        return [
+            'id' => $this->productsProvider->save($form),
+        ];
     }
 
     private function createPagination(SearchResult $result, int $currentPage): LengthAwarePaginator

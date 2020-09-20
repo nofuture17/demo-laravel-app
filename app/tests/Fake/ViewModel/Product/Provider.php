@@ -13,6 +13,12 @@ class Provider implements ProviderInterface
 {
     const EXIST_PRODUCT_NAME = 'someExistProduct';
     const TOTAL_COUNT = 30;
+    const SAVED_PRODUCT_POSITION = 2;
+
+    public function save(Product $form): int
+    {
+        return 1;
+    }
 
     public function search($name, $page): SearchResult
     {
@@ -21,7 +27,11 @@ class Provider implements ProviderInterface
             $index = $this->calculateFirstIndex($page);
             $count = 0;
             while ($index < self::TOTAL_COUNT && $count++ < self::PAGE_SIZE) {
-                $items[] = $this->createProduct($index++);
+                $product = $this->createProduct($index++);
+                if ($count == self::SAVED_PRODUCT_POSITION) {
+                    $this->makeProductSaved($product);
+                }
+                $items[] = $product;
             }
         }
         return new SearchResult(new Collection($items), self::TOTAL_COUNT);
@@ -31,8 +41,8 @@ class Provider implements ProviderInterface
     {
         $product = new Product();
         $product->name = 'Name#' . $index;
-        $product->imageUrl = 'ImageUrl#' . $index;
-        $product->externalID = 'ExternalID#' . $index;
+        $product->image_url = 'ImageUrl#' . $index;
+        $product->external_id = 'ExternalID#' . $index;
         $product->categories = 'Category1#' . $index . ', Category2#' . $index;
         return $product;
     }
@@ -40,5 +50,10 @@ class Provider implements ProviderInterface
     private function calculateFirstIndex(int $page): int
     {
         return self::PAGE_SIZE * ($page - 1);
+    }
+
+    private function makeProductSaved(Product $product): int
+    {
+        return $product->id = 1;
     }
 }

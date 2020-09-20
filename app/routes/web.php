@@ -15,3 +15,4 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [ProductController::class, 'search']);
+Route::post('/save', [ProductController::class, 'save']);

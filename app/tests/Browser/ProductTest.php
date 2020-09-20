@@ -11,13 +11,27 @@ class ProductTest extends DuskTestCase
 {
     public function testSave()
     {
+        $this->browse(function (Browser $browser) {
+            $browser->visit(new HtmlSearchPage())
+                ->enterProductName(Provider::EXIST_PRODUCT_NAME)
+                ->saveProduct(1)
+                ->assertProductIsSaved(1);
+        });
+    }
 
+    public function testPreSavedProduct()
+    {
+        $this->browse(function (Browser $browser) {
+            $browser->visit(new HtmlSearchPage())
+                ->enterProductName(Provider::EXIST_PRODUCT_NAME)
+                ->assertProductIsSaved(Provider::SAVED_PRODUCT_POSITION);
+        });
     }
 
     public function testEmptyForm()
     {
         $this->browse(function (Browser $browser) {
-            $browser->visit(new HtmlSearchPage($this->baseUrl()))
+            $browser->visit(new HtmlSearchPage())
                 ->assertDontHasResult();
         });
     }
@@ -25,7 +39,7 @@ class ProductTest extends DuskTestCase
     public function testSearchNotExistProduct()
     {
         $this->browse(function (Browser $browser) {
-            $browser->visit(new HtmlSearchPage($this->baseUrl()))
+            $browser->visit(new HtmlSearchPage())
                 ->enterProductName('someNotExistProductName')
                 ->assertHasEmptyResult();
         });
@@ -34,16 +48,16 @@ class ProductTest extends DuskTestCase
     public function testSearchExistProduct()
     {
         $this->browse(function (Browser $browser) {
-            $browser->visit(new HtmlSearchPage($this->baseUrl()))
+            $browser->visit(new HtmlSearchPage())
                 ->enterProductName(Provider::EXIST_PRODUCT_NAME)
                 ->assertHasPagination([2])
                 ->assertHasNotEmptyResult(20)
-                ->visit(new HtmlSearchPage($this->baseUrl(), Provider::EXIST_PRODUCT_NAME, 2))
+                ->visit(new HtmlSearchPage(Provider::EXIST_PRODUCT_NAME, 2))
                 ->assertHasPagination([1])
                 ->assertHasNotEmptyResult(10)
-                ->visit(new HtmlSearchPage($this->baseUrl(), Provider::EXIST_PRODUCT_NAME, 3))
+                ->visit(new HtmlSearchPage(Provider::EXIST_PRODUCT_NAME, 3))
                 ->assertHasEmptyResult()
-                ->visit(new HtmlSearchPage($this->baseUrl(), Provider::EXIST_PRODUCT_NAME, 0))
+                ->visit(new HtmlSearchPage(Provider::EXIST_PRODUCT_NAME, 0))
                 ->assertHasEmptyResult();
         });
     }
