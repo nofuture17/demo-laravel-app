@@ -22,9 +22,9 @@ services:
     environment:
     - TZ=Europe/Moscow
     - MYSQL_ROOT_PASSWORD=wda@31faw@
-    - MYSQL_DATA_BASE=app
+    - MYSQL_DATABASE=app
     - MYSQL_USER=appuser
-    - MYSQL_PASSWORD=sew1e@eaw1$
+    - MYSQL_PASSWORD=sew1e@eaw1
 
   php:
     build: ./php
