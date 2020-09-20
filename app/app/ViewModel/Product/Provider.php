@@ -20,17 +20,12 @@ class Provider implements ProviderInterface
 
     public function search($name, $page): SearchResult
     {
-        $modelResult = $this->productsProviderModel->search($name, self::PAGE_SIZE, self::calculateOffset($page));
+        $modelResult = $this->productsProviderModel->search($name, self::PAGE_SIZE, $page);
         $products = [];
         foreach ($modelResult->getItems() as $item) {
             $products[] = $this->createProductVM($item);
         }
         return new SearchResult(new Collection($products), $modelResult->getTotalCount());
-    }
-
-    public static function calculateOffset(int $page): int
-    {
-        return self::PAGE_SIZE * ($page - 1);
     }
 
     public static function calculatePagesCount(int $itemsCount): int
@@ -43,7 +38,7 @@ class Provider implements ProviderInterface
         $product = new Product();
         $product->name = $item->name;
         $product->externalID = $item->external_id;
-        $product->imageUrl = $item->image;
+        $product->imageUrl = $item->image_url;
         $product->categories = $item->categories;
         return $product;
     }

@@ -51,11 +51,7 @@ class ViewModelProductProviderTest extends TestCase
 
     private function assertPageResult(ProviderInterface $modelProvider, ViewModelProviderInterface $viewModelProvider, int $page)
     {
-        $modelResult = $modelProvider->search(
-            Provider::EXIST_PRODUCT_NAME,
-            ViewModelProviderInterface::PAGE_SIZE,
-            ViewModelProvider::calculateOffset($page)
-        );
+        $modelResult = $modelProvider->search(Provider::EXIST_PRODUCT_NAME, ViewModelProviderInterface::PAGE_SIZE, $page);
         $viewModelResult = $viewModelProvider->search(Provider::EXIST_PRODUCT_NAME, $page);
         $this->assertResults($modelResult, $viewModelResult);
     }
@@ -81,7 +77,7 @@ class ViewModelProductProviderTest extends TestCase
     private function assertItem(Product $modelItem, ViewModelProduct $viewModelItem)
     {
         $this->assertEquals($modelItem->name, $viewModelItem->name);
-        $this->assertEquals($modelItem->image, $viewModelItem->imageUrl);
+        $this->assertEquals($modelItem->image_url, $viewModelItem->imageUrl);
         $this->assertEquals($modelItem->external_id, $viewModelItem->externalID);
         $this->assertEquals($modelItem->categories, $viewModelItem->categories);
     }

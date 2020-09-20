@@ -9,6 +9,6 @@ class Product
     public $id;
     public $external_id;
     public $name;
-    public $image;
+    public $image_url;
     public $categories;
 }
