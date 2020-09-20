@@ -25,9 +25,9 @@ $updateButtonText = 'Update'
                 @if($items->isNotEmpty())
                     <div class="results__items">
                         @foreach($items as $item)
-                            <div class="results__item product flex justify-evenly my-2">
+                            <div class="results__item product grid grid-cols-5 my-4">
                                 <button
-                                    class="product__save bg-blue-500 rounded p-1">{{ $item->id ? $updateButtonText : 'Save' }}</button>
+                                    class="product__save bg-blue-500 rounded h-12">{{ $item->id ? $updateButtonText : 'Save' }}</button>
                                 <div class="product__external_id">{{$item->external_id}}</div>
                                 <div class="product__name">{{$item->name}}</div>
                                 <div class="product__image"><img src="{{$item->image_url}}" alt=""></div>
@@ -48,7 +48,7 @@ $updateButtonText = 'Update'
     </div>
     <style>
         .results__item > div {
-            display: inline-block;
+            text-align: center;
         }
     </style>
     <script>
