@@ -16,22 +16,22 @@ class HtmlSearchPage extends Page implements SearchPage
     /**
      * @var string
      */
-    private $name;
+    private $productName;
 
     /**
      * @var int
      */
     private $page;
 
-    public function __construct(?string $name = null, ?int $page = null)
+    public function __construct(?string $productName = null, ?int $page = null)
     {
-        $this->name = $name;
+        $this->productName = $productName;
         $this->page = $page;
     }
 
     public function url()
     {
-        return $this->createUrl($this->name, $this->page);
+        return $this->createUrl($this->productName, $this->page);
     }
 
     public function assert(Browser $browser)
@@ -67,7 +67,7 @@ class HtmlSearchPage extends Page implements SearchPage
     {
         $browser->type('@nameInput', $name)
             ->press("@submit");
-        $this->name = $name;
+        $this->productName = $name;
     }
 
     public function assertDontHasResult(Browser $browser)
@@ -95,7 +95,7 @@ class HtmlSearchPage extends Page implements SearchPage
     {
         $browser->assertPresent('@paginationBlock');
         foreach ($items as $page) {
-            $browser->assertSourceHas($this->createUrl($this->name, $page, true));
+            $browser->assertSourceHas($this->createUrl($this->productName, $page, true));
         }
     }
 
@@ -125,7 +125,7 @@ class HtmlSearchPage extends Page implements SearchPage
         if ($name) {
             $url .= "?name={$name}";
             if (isset($page)) {
-                $url .= ($escapedAmp ? '&amp;' : '&') . "page={$page}";
+                $url .= ($escapedAmp ? '&amp;' : '&') . "page={$page}"; // paginator adds "&amp;" to link
             }
         }
 
@@ -137,10 +137,6 @@ class HtmlSearchPage extends Page implements SearchPage
         return ".product:nth-child({$position})";
     }
 
-    /**
-     * @param int $position
-     * @return string
-     */
     private function createSaveButtonSelector(int $position): string
     {
         return $this->createProductPositionSelector($position) . ' > .product__save';
